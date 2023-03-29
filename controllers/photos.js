@@ -16,8 +16,21 @@ function create(req, res) {
   })
 }
 
+function index(req, res) {
+  Photo.find({})
+  .populate('owner')
+  .then(photos => {
+    res.json(photos)
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json({err: err.errmsg})
+  })
+}
+
 
 
 export {
-  create
+  create,
+  index
 }
