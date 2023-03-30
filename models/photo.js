@@ -6,6 +6,7 @@ const photoSchema = new Schema({
   photoTitle: {type: String, required: true},
   photoEvent: {type: String, required: true},
   photoDate: {type: Date, required: true},
+  photo: {type: String},
   owner: {type: mongoose.Schema.Types.ObjectId, ref: 'Profile'},
 }, {
   timestamps: true

@@ -9,6 +9,7 @@ router.get('/', photosCtrl.index)
 /*---------- Protected Routes ----------*/
 router.use(decodeUserFromToken)
 router.post('/', checkAuth, photosCtrl.create)
+router.delete('/:id', checkAuth, photosCtrl.delete)
 
 export {
   router

@@ -1,4 +1,5 @@
 import { Photo } from '../models/photo.js'
+import { v2 as cloudinary } from 'cloudinary'
 
 function create(req, res) {
   req.body.owner = req.user.profile
@@ -28,9 +29,47 @@ function index(req, res) {
   })
 }
 
+function addPhoto(req, res) {
+  const imageFile = req.files.photo.path
+  Photo.findById(req.params.id)
+  .then(photo => {
+    cloudinary.uploader.upload(imageFile, {tags: `${photo.name}`})
+    .then(image => {
+      photo.photo = image.url
+      photo.save()
+      .then(photo => {
+        res.status(201).json(photo.photo)
+      })
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json(err)
+    })
+  })
+}
+
+function deleteOne(req, res) {
+  Photo.findById(req.params.id)
+  .then(photo => {
+    if (photo.owner._id.equals(req.user.profile)){
+      Photo.findByIdAndDelete(photo._id)
+      .then(deletedPhoto => {
+        res.json(deletedPhoto)
+      })
+    } else {
+      res.status(401).json({err: "Not authorized"})
+    }
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json({err: err.errmsg})
+  })
+}
 
 
 export {
   create,
-  index
+  index,
+  addPhoto,
+  deleteOne as delete
 }
