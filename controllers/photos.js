@@ -33,8 +33,9 @@ function addPhoto(req, res) {
   const imageFile = req.files.photo.path
   Photo.findById(req.params.id)
   .then(photo => {
-    cloudinary.uploader.upload(imageFile, {tags: `${photo.name}`})
+    cloudinary.uploader.upload(imageFile, {tags: `${photo.photoTitle}`})
     .then(image => {
+      console.log(image)
       photo.photo = image.url
       photo.save()
       .then(photo => {
@@ -66,10 +67,29 @@ function deleteOne(req, res) {
   })
 }
 
+function update(req, res) {
+  Photo.findById(req.params.id)
+  .then(photo => {
+    if (photo.owner._id.equals(req.user.profile)){
+      Photo.findByIdAndUpdate(req.params.id, req.body, {new:true})
+      .populate('owner')
+      .then(updatedPhoto => {
+        res.json(updatedPhoto)
+      })
+    } else {
+      res.status(401).json({err: "Not Authorized"})
+    }
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json({err: err.errmsg})
+  })
+} 
 
 export {
   create,
   index,
   addPhoto,
-  deleteOne as delete
+  deleteOne as delete,
+  update
 }

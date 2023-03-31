@@ -10,6 +10,8 @@ router.get('/', photosCtrl.index)
 router.use(decodeUserFromToken)
 router.post('/', checkAuth, photosCtrl.create)
 router.delete('/:id', checkAuth, photosCtrl.delete)
+router.put('/:id', checkAuth, photosCtrl.update)
+router.put('/:id/add-photo', checkAuth, photosCtrl.addPhoto)
 
 export {
   router
