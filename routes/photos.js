@@ -5,6 +5,7 @@ const router = Router()
 
 /*---------- Public Routes ----------*/
 router.get('/', photosCtrl.index)
+router.get('/:id', photosCtrl.show)
 
 /*---------- Protected Routes ----------*/
 router.use(decodeUserFromToken)

@@ -84,12 +84,24 @@ function update(req, res) {
     console.log(err)
     res.status(500).json({err: err.errmsg})
   })
-} 
+}
+
+function show(req, res) {
+  Photo.findById(req.params.id)
+  .then(photo => {
+    res.json(photo)
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json({err: err.errmsg})
+  })
+}
 
 export {
   create,
   index,
   addPhoto,
   deleteOne as delete,
-  update
+  update,
+  show
 }
