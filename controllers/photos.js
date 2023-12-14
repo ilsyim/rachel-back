@@ -68,23 +68,17 @@ function deleteOne(req, res) {
 }
 
 function update(req, res) {
-  Photo.findById(req.params.id)
-  .then(photo => {
-    if (photo.owner._id.equals(req.user.profile)){
-      Photo.findByIdAndUpdate(req.params.id, req.body, {new:true})
-      .populate('owner')
-      .then(updatedPhoto => {
-        res.json(updatedPhoto)
-      })
-    } else {
-      res.status(401).json({err: "Not Authorized"})
-    }
+  Photo.findByIdAndUpdate(req.params.id, req.body, {new: true})
+  .populate('owner')
+  .then(updatedPhoto => {
+      res.json(updatedPhoto)
   })
   .catch(err => {
     console.log(err)
     res.status(500).json({err: err.errmsg})
   })
 }
+
 
 function show(req, res) {
   Photo.findById(req.params.id)
@@ -103,5 +97,5 @@ export {
   addPhoto,
   deleteOne as delete,
   update,
-  show
+  show,
 }
